@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Реєстрація</title>
+    <link rel="stylesheet" href="/style.css"> </head>
+<body>
+    <div class="form-card">
+        <h2>Створити акаунт</h2>
+        <p>Заповніть форму для реєстрації</p>
+        <form id="regForm">
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Логін</label>
+                    <input name="username" type="text" placeholder="Ім'я" required>
+                </div>
+                <div class="input-group">
+                    <label>Пароль</label>
+                    <input name="password" type="password" placeholder="••••••••" required>
+                </div>
+                <div class="input-group full-width">
+                    <label>Email</label>
+                    <input name="email" type="email" placeholder="mail@example.com" required>
+                </div>
+            </div>
+            <button type="submit" id="submitBtn" class="btn">Зареєструватися</button>
+        </form>
+    </div>
+
+    <div id="message" class="toast-message"></div>
+
+    <script>
+        const form = document.getElementById('regForm');
+        const messageDiv = document.getElementById('message');
+        const btn = document.getElementById('submitBtn');
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            btn.disabled = true;
+            const formData = new URLSearchParams(new FormData(form));
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.text();
+
+                messageDiv.innerText = result;
+                messageDiv.className = 'toast-message show ' + (response.ok ? 'success' : 'error');
+                if(response.ok) form.reset();
+                
+                setTimeout(() => messageDiv.classList.remove('show'), 4000);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                btn.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>
