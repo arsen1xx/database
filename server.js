@@ -8,18 +8,15 @@ dotenv.config();
 const app = express();
 const PORT = 3000;
 
-// ПІДКЛЮЧЕННЯ ДО БАЗИ
 const pool = new pg.Pool({
     connectionString: process.env.DB_URL,
     ssl: { rejectUnauthorized: false }
 });
 
-// НАЛАШТУВАННЯ (Важливо: рядок static має бути першим)
 app.use(express.static('public')); 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// ОБРОБКА РЕЄСТРАЦІЇ
 app.post('/register', async (req, res) => {
     const { username, email, password } = req.body;
     try {
